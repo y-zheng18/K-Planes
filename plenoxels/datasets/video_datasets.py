@@ -66,8 +66,27 @@ class Video360Dataset(BaseDataset):
 
         if dset_type == "fluid":
             print("Loading fluid poses")
-            per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_fluidvideo_poses(
-                datadir, downsample=self.downsample, split=split)
+            # per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_fluidvideo_poses(
+            #     datadir, downsample=self.downsample, split=split)
+            # if split == 'test':
+            #     keyframes = False
+            # poses, imgs, timestamps, self.median_imgs = load_llffvideo_data(
+            #     videopaths=videopaths, cam_poses=per_cam_poses, intrinsics=intrinsics,
+            #     split=split, keyframes=keyframes, keyframes_take_each=30)
+            # self.poses = poses.float()
+            # if contraction:
+            #     self.per_cam_near_fars = per_cam_near_fars.float()
+            # else:
+            #     self.per_cam_near_fars = torch.tensor(
+            #         [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
+            # timestamps = (timestamps.float() / 119) * 2 - 1
+            # self.global_translation = torch.tensor([0, 0, 2.])
+            # self.global_scale = torch.tensor([0.5, 0.7, 0.5])
+            # else:
+            #     self.per_cam_near_fars = torch.tensor(
+            #         [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
+            per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_llffvideo_poses(
+                datadir, downsample=self.downsample, split=split, near_scaling=self.near_scaling)
             if split == 'test':
                 keyframes = False
             poses, imgs, timestamps, self.median_imgs = load_llffvideo_data(
@@ -82,10 +101,6 @@ class Video360Dataset(BaseDataset):
             timestamps = (timestamps.float() / 119) * 2 - 1
             self.global_translation = torch.tensor([0, 0, 2.])
             self.global_scale = torch.tensor([0.5, 0.7, 0.5])
-            # else:
-            #     self.per_cam_near_fars = torch.tensor(
-            #         [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
-
         # Note: timestamps are stored normalized between -1, 1.
         elif dset_type == "llff":
             if split == "render":

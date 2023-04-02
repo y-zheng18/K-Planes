@@ -149,4 +149,5 @@ if __name__ == '__main__':
 
     camera_params = np.concatenate([camera_params_test, camera_params_train], axis=0)
     print(camera_params.shape)
+    print(camera_params)
     np.save('/Users/yangzheng/code/project/smoke/data/poses_bounds.npy', camera_params)

@@ -65,6 +65,7 @@ class Video360Dataset(BaseDataset):
             dset_type = "llff"
 
         if dset_type == "fluid":
+            print("Loading fluid poses")
             per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_fluidvideo_poses(
                 datadir, downsample=self.downsample, split=split)
             if split == 'test':

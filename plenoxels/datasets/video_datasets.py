@@ -13,7 +13,7 @@ import torch
 from .base_dataset import BaseDataset
 from .data_loading import parallel_load_images
 from .intrinsics import Intrinsics
-from .llff_dataset import load_llff_poses_helper
+from .llff_dataset import load_llff_poses_helper, load_fluid_poses_helper
 from .ray_utils import (
     generate_spherical_poses, create_meshgrid, stack_camera_dirs, get_rays, generate_spiral_path
 )
@@ -59,11 +59,28 @@ class Video360Dataset(BaseDataset):
             raise ValueError("Options 'contraction' and 'ndc' are exclusive.")
         if "lego" in datadir or "dnerf" in datadir:
             dset_type = "synthetic"
+        elif 'fluid' in datadir:
+            dset_type = "fluid"
         else:
             dset_type = "llff"
 
+        if dset_type == "fluid":
+            per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_fluidvideo_poses(
+                datadir, downsample=self.downsample, split=split)
+            if split == 'test':
+                keyframes = False
+            poses, imgs, timestamps, self.median_imgs = load_llffvideo_data(
+                videopaths=videopaths, cam_poses=per_cam_poses, intrinsics=intrinsics,
+                split=split, keyframes=keyframes, keyframes_take_each=30)
+            self.poses = poses.float()
+            self.per_cam_near_fars = per_cam_near_fars.float()
+            timestamps = (timestamps.float() / 119) * 2 - 1
+            # else:
+            #     self.per_cam_near_fars = torch.tensor(
+            #         [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
+
         # Note: timestamps are stored normalized between -1, 1.
-        if dset_type == "llff":
+        elif dset_type == "llff":
             if split == "render":
                 assert ndc, "Unable to generate render poses without ndc: don't know near-far."
                 per_cam_poses, per_cam_near_fars, intrinsics, _ = load_llffvideo_poses(
@@ -392,6 +409,48 @@ def load_llffvideo_poses(datadir: str,
         List[str]: List of length N containing the path to each camera's data.
     """
     poses, near_fars, intrinsics = load_llff_poses_helper(datadir, downsample, near_scaling)
+
+    videopaths = np.array(glob.glob(os.path.join(datadir, '*.mp4')))  # [n_cameras]
+    assert poses.shape[0] == len(videopaths), \
+        'Mismatch between number of cameras and number of poses!'
+    videopaths.sort()
+
+    # The first camera is reserved for testing, following https://github.com/facebookresearch/Neural_3D_Video/releases/tag/v1.0
+    if split == 'train':
+        split_ids = np.arange(1, poses.shape[0])
+    elif split == 'test':
+        split_ids = np.array([0])
+    else:
+        split_ids = np.arange(poses.shape[0])
+    if 'coffee_martini' in datadir:
+        # https://github.com/fengres/mixvoxels/blob/0013e4ad63c80e5f14eb70383e2b073052d07fba/dataLoader/llff_video.py#L323
+        log.info(f"Deleting unsynchronized camera from coffee-martini video.")
+        split_ids = np.setdiff1d(split_ids, 12)
+    poses = torch.from_numpy(poses[split_ids])
+    near_fars = torch.from_numpy(near_fars[split_ids])
+    videopaths = videopaths[split_ids].tolist()
+
+    return poses, near_fars, intrinsics, videopaths
+
+def load_fluidvideo_poses(datadir: str,
+                         downsample: float,
+                         split: str) -> Tuple[
+                            torch.Tensor, torch.Tensor, Intrinsics, List[str]]:
+    """Load poses and metadata for LLFF video.
+
+    Args:
+        datadir (str): Directory containing the videos and pose information
+        downsample (float): How much to downsample videos. The default for LLFF videos is 2.0
+        split (str): 'train' or 'test'.
+        near_scaling (float): How much to scale the near bound of poses.
+
+    Returns:
+        Tensor: A tensor of size [N, 4, 4] containing c2w poses for each camera.
+        Tensor: A tensor of size [N, 2] containing near, far bounds for each camera.
+        Intrinsics: The camera intrinsics. These are the same for every camera.
+        List[str]: List of length N containing the path to each camera's data.
+    """
+    poses, near_fars, intrinsics = load_fluid_poses_helper(datadir, downsample)
 
     videopaths = np.array(glob.glob(os.path.join(datadir, '*.mp4')))  # [n_cameras]
     assert poses.shape[0] == len(videopaths), \

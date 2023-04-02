@@ -1,5 +1,5 @@
 config = {
- 'expname': 'cutbeef_hybrid',
+ 'expname': 'nerfluid_hybrid',
  'logdir': './logs/fluiddynamic',
  'device': 'cuda:0',
 

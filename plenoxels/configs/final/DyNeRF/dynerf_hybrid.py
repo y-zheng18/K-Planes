@@ -4,7 +4,7 @@ config = {
  'device': 'cuda:0',
 
  # Run first for 1 step with data_downsample=4 to generate weights for ray importance sampling
- 'data_downsample': 2,
+ 'data_downsample': 4,
  'data_dirs': ['/viscam/u/yangzheng/dynerf/cut_roasted_beef'],
  'contract': False,
  'ndc': True,

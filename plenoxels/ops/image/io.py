@@ -68,6 +68,34 @@ def write_video_to_file(file_name, frames: List[np.ndarray]):
             video.write(img[:, :, ::-1])  # opencv uses BGR instead of RGB
         cv2.destroyAllWindows()
         video.release()
+        # save preds, gt, and err separately
+        height_3, width_3 = height // 3, width
+        video = cv2.VideoWriter(
+            file_name.replace('.mp4', '_pred.mp4'), cv2.VideoWriter_fourcc(*'mp4v'), 30, (width_3, height_3))
+        for img in frames:
+            if isinstance(img, torch.Tensor):
+                img = img.numpy()
+            video.write(img[:height_3, :, ::-1])
+        cv2.destroyAllWindows()
+        video.release()
+
+        video = cv2.VideoWriter(
+            file_name.replace('.mp4', '_gt.mp4'), cv2.VideoWriter_fourcc(*'mp4v'), 30, (width_3, height_3))
+        for img in frames:
+            if isinstance(img, torch.Tensor):
+                img = img.numpy()
+            video.write(img[height_3:2*height_3, :, ::-1])
+        cv2.destroyAllWindows()
+        video.release()
+
+        video = cv2.VideoWriter(
+            file_name.replace('.mp4', '_err.mp4'), cv2.VideoWriter_fourcc(*'mp4v'), 30, (width_3, height_3))
+        for img in frames:
+            if isinstance(img, torch.Tensor):
+                img = img.numpy()
+            video.write(img[2*height_3:, :, ::-1])
+        cv2.destroyAllWindows()
+        video.release()
     else:
         height = sizes[:, 0].max()
         width = sizes[:, 1].max()

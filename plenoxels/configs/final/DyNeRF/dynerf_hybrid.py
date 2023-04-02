@@ -12,12 +12,12 @@ config = {
  'near_scaling': 0.95,
  'isg': False,
  'isg_step': -1,
- 'ist_step': 25000,
+ 'ist_step': 50000,
  'keyframes': False,
  'scene_bbox':  [[-3.0, -1.8, -1.2], [3.0, 1.8, 1.2]],
 
  # Optimization settings
- 'num_steps': 30001,
+ 'num_steps': 90001,
  'batch_size': 4096,
  'scheduler_type': 'warmup_cosine',
  'optim_type': 'adam',
@@ -34,8 +34,8 @@ config = {
  'time_smoothness_weight_proposal_net': 1e-05,
 
  # Training settings
- 'save_every': 5000,
- 'valid_every': 5000,
+ 'save_every': 10000,
+ 'valid_every': 10000,
  'save_outputs': True,
  'train_fp16': True,
 

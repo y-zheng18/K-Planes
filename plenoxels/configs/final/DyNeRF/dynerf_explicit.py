@@ -1,5 +1,5 @@
 config = {
- 'expname': 'nerfluid_explicit',
+ 'expname': 'nerfluid_explicit_debug',
  'logdir': './logs/fluiddynamic',
  'device': 'cuda:0',
 

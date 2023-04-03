@@ -113,7 +113,7 @@ class Video360Dataset(BaseDataset):
 
                 print(self.poses.shape)
                 print(self.per_cam_near_fars.shape)
-                timestamps = (timestamps.float() / 119) * 2 - 1
+                # timestamps = (timestamps.float() / 119) * 2 - 1
                 # assert ndc, "Unable to generate render poses without ndc: don't know near-far."
                 # per_cam_poses, per_cam_near_fars, intrinsics, _ = load_llffvideo_poses(
                 #     datadir, downsample=self.downsample, split='train', near_scaling=self.near_scaling)

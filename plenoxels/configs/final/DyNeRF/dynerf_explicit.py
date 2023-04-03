@@ -7,7 +7,7 @@ config = {
  'data_downsample': 2,
  'data_dirs': ['/viscam/u/yangzheng/fluid'],
  'contract': True,
- 'ndc': True,
+ 'ndc': False,
  'ndc_far': 2.6,
  'near_scaling': 0.95,
  'isg': False,

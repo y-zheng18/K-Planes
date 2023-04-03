@@ -49,6 +49,8 @@ def load_pinf_frame_data(basedir, half_res=False, split='train'):
     all_imgs = []
     all_poses = []
 
+    c2w = np.array([[-1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])
+
     with open(os.path.join(basedir, 'info.json'), 'r') as fp:
         # read render settings
         meta = json.load(fp)
@@ -98,7 +100,7 @@ def load_pinf_frame_data(basedir, half_res=False, split='train'):
                 imgs = imgs_half_res
 
             all_imgs.append(imgs)
-            all_poses.append(np.array(
+            all_poses.append(c2w @ np.array(
                 train_video['transform_matrix_list'][frame_i]
                 if 'transform_matrix_list' in train_video else train_video['transform_matrix']
             ).astype(np.float32))

@@ -1,11 +1,11 @@
 config = {
- 'expname': 'cutbeef_explicit',
- 'logdir': './logs/realdynamic',
+ 'expname': 'nerfluid_explicit',
+ 'logdir': './logs/fluiddynamic',
  'device': 'cuda:0',
 
  # Run first for 1 step with data_downsample=4 to generate weights for ray importance sampling
- 'data_downsample': 4,
- 'data_dirs': ['/viscam/u/yangzheng/dynerf/cut_roasted_beef'],
+ 'data_downsample': 2,
+ 'data_dirs': ['/viscam/u/yangzheng/fluid'],
  'contract': True,
  'ndc': True,
  'ndc_far': 2.6,
@@ -34,8 +34,8 @@ config = {
  'time_smoothness_weight_proposal_net': 1e-05,
 
  # Training settings
- 'save_every': 30000,
- 'valid_every': 30000,
+ 'save_every': 20000,
+ 'valid_every': 20000,
  'save_outputs': True,
  'train_fp16': True,
 

@@ -6,7 +6,7 @@ config = {
  # Run first for 1 step with data_downsample=4 to generate weights for ray importance sampling
  'data_downsample': 4,
  'data_dirs': ['/viscam/u/yangzheng/dynerf/cut_roasted_beef'],
- 'contract': False,
+ 'contract': True,
  'ndc': True,
  'ndc_far': 2.6,
  'near_scaling': 0.95,
@@ -14,14 +14,14 @@ config = {
  'isg_step': -1,
  'ist_step': 50000,
  'keyframes': False,
- 'scene_bbox': [[-3.0, -1.8, -1.2], [3.0, 1.8, 1.2]],
+ 'scene_bbox': [[-3.0, -3, -3], [3.0, 3, 3]],
 
  # Optimization settings
  'num_steps': 120001,
  'batch_size': 4096,
  'scheduler_type': 'warmup_cosine',
  'optim_type': 'adam',
- 'lr': 0.01,
+ 'lr': 0.02,
 
  # Regularization
  'distortion_loss_weight': 0.001,

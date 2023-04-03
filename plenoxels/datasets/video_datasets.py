@@ -85,20 +85,32 @@ class Video360Dataset(BaseDataset):
             # else:
             #     self.per_cam_near_fars = torch.tensor(
             #         [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
-            per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_llffvideo_poses(
-                datadir, downsample=self.downsample, split=split, near_scaling=self.near_scaling)
-            if split == 'test':
-                keyframes = False
-            poses, imgs, timestamps, self.median_imgs = load_llffvideo_data(
-                videopaths=videopaths, cam_poses=per_cam_poses, intrinsics=intrinsics,
-                split=split, keyframes=keyframes, keyframes_take_each=30)
-            self.poses = poses.float()
-            if contraction:
-                self.per_cam_near_fars = per_cam_near_fars.float()
+            if split == "render":
+                assert ndc, "Unable to generate render poses without ndc: don't know near-far."
+                per_cam_poses, per_cam_near_fars, intrinsics, _ = load_llffvideo_poses(
+                    datadir, downsample=self.downsample, split='all', near_scaling=self.near_scaling)
+                render_poses = generate_spiral_path(
+                    per_cam_poses.numpy(), per_cam_near_fars.numpy(), n_frames=300,
+                    n_rots=2, zrate=0.5, dt=self.near_scaling, percentile=60)
+                self.poses = torch.from_numpy(render_poses).float()
+                self.per_cam_near_fars = torch.tensor([[0.4, self.ndc_far]])
+                timestamps = torch.linspace(0, 299, len(self.poses))
+                imgs = None
             else:
-                self.per_cam_near_fars = torch.tensor(
-                    [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
-            timestamps = (timestamps.float() / 119) * 2 - 1
+                per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_llffvideo_poses(
+                    datadir, downsample=self.downsample, split=split, near_scaling=self.near_scaling)
+                if split == 'test':
+                    keyframes = False
+                poses, imgs, timestamps, self.median_imgs = load_llffvideo_data(
+                    videopaths=videopaths, cam_poses=per_cam_poses, intrinsics=intrinsics,
+                    split=split, keyframes=keyframes, keyframes_take_each=30)
+                self.poses = poses.float()
+                if contraction:
+                    self.per_cam_near_fars = per_cam_near_fars.float()
+                else:
+                    self.per_cam_near_fars = torch.tensor(
+                        [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
+                timestamps = (timestamps.float() / 119) * 2 - 1
             self.global_translation = torch.tensor([0, 0, 2.])
             self.global_scale = torch.tensor([0.5, 0.7, 0.5])
         # Note: timestamps are stored normalized between -1, 1.

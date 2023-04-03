@@ -93,11 +93,10 @@ class Video360Dataset(BaseDataset):
                     per_cam_poses.numpy(), per_cam_near_fars.numpy(), n_frames=120,
                     n_rots=2, zrate=0.5, dt=self.near_scaling, percentile=60)
                 self.poses = torch.from_numpy(render_poses).float()
-                self.per_cam_near_fars = torch.tensor([[0.4, self.ndc_far]])
+                self.per_cam_near_fars = per_cam_near_fars[0] #torch.tensor([[0.4, self.ndc_far]])
                 print(self.poses.shape)
-                print(per_cam_near_fars.shape)
-                timestamps = torch.linspace(0, 119, len(self.poses))
-                timestamps = (timestamps.float() / 119) * 2 - 1
+                print(self.per_cam_near_fars.shape)
+                timestamps = torch.arange(0, 120).float() / 119 * 2 - 1
                 imgs = None
             else:
                 per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_llffvideo_poses(

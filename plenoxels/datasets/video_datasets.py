@@ -87,19 +87,18 @@ class Video360Dataset(BaseDataset):
             #         [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
             if split == "render":
                 per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_llffvideo_poses(
-                    datadir, downsample=self.downsample, split='train', near_scaling=self.near_scaling)
-                if split == 'test':
-                    keyframes = False
+                    datadir, downsample=self.downsample, split='test', near_scaling=self.near_scaling)
+                keyframes = False
                 poses, imgs, timestamps, self.median_imgs = load_llffvideo_data(
                     videopaths=videopaths, cam_poses=per_cam_poses, intrinsics=intrinsics,
-                    split='train', keyframes=keyframes, keyframes_take_each=30)
-                self.poses = poses.float()[0].repeat(120, 1, 1)
-                print('poses', self.poses.shape)
-                self.per_cam_near_fars = per_cam_near_fars.float()[:1]
-
-                print('per_cam_near_fars', self.per_cam_near_fars.shape)
+                    split='test', keyframes=keyframes, keyframes_take_each=30)
+                self.poses = poses.float()
+                if contraction:
+                    self.per_cam_near_fars = per_cam_near_fars.float()
+                else:
+                    self.per_cam_near_fars = torch.tensor(
+                        [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
                 timestamps = (timestamps.float() / 119) * 2 - 1
-                imgs = None
                 # assert ndc, "Unable to generate render poses without ndc: don't know near-far."
                 # per_cam_poses, per_cam_near_fars, intrinsics, _ = load_llffvideo_poses(
                 #     datadir, downsample=self.downsample, split='train', near_scaling=self.near_scaling)

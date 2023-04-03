@@ -106,7 +106,7 @@ class Video360Dataset(BaseDataset):
                 timestamps = torch.arange(0, 120).float() / 119 * 2 - 1
                 imgs = None
                 if contraction:
-                    self.per_cam_near_fars = per_cam_near_fars.float()
+                    self.per_cam_near_fars = per_cam_near_fars.float()[:1]
                 else:
                     self.per_cam_near_fars = torch.tensor(
                         [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)

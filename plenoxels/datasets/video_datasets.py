@@ -86,20 +86,37 @@ class Video360Dataset(BaseDataset):
             #     self.per_cam_near_fars = torch.tensor(
             #         [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
             if split == "render":
-                assert ndc, "Unable to generate render poses without ndc: don't know near-far."
-                per_cam_poses, per_cam_near_fars, intrinsics, _ = load_llffvideo_poses(
+                per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_llffvideo_poses(
                     datadir, downsample=self.downsample, split='train', near_scaling=self.near_scaling)
-                render_poses = per_cam_poses[0].numpy().reshape(-1, 3, 4)
-                render_poses = np.repeat(render_poses, 120, axis=0)
-                # render_poses = generate_spiral_path(
-                #     per_cam_poses.numpy(), per_cam_near_fars.numpy(), n_frames=120,
-                #     n_rots=2, zrate=0.5, dt=self.near_scaling, percentile=60)
-                self.poses = torch.from_numpy(render_poses).float()
-                self.per_cam_near_fars = per_cam_near_fars[0].float() #torch.tensor([[0.4, self.ndc_far]])
-                print(self.poses.shape)
-                print(self.per_cam_near_fars.shape)
-                timestamps = torch.arange(0, 120).float() / 119 * 2 - 1
+                if split == 'test':
+                    keyframes = False
+                poses, imgs, timestamps, self.median_imgs = load_llffvideo_data(
+                    videopaths=videopaths, cam_poses=per_cam_poses, intrinsics=intrinsics,
+                    split='train', keyframes=keyframes, keyframes_take_each=30)
+                self.poses = poses.float()[0].repeat(120, 1, 1)
+                print('poses', self.poses.shape)
+                if contraction:
+                    self.per_cam_near_fars = per_cam_near_fars.float()[0]
+                else:
+                    self.per_cam_near_fars = torch.tensor(
+                        [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
+                print('per_cam_near_fars', self.per_cam_near_fars.shape)
+                timestamps = (timestamps.float() / 119) * 2 - 1
                 imgs = None
+                # assert ndc, "Unable to generate render poses without ndc: don't know near-far."
+                # per_cam_poses, per_cam_near_fars, intrinsics, _ = load_llffvideo_poses(
+                #     datadir, downsample=self.downsample, split='train', near_scaling=self.near_scaling)
+                # render_poses = per_cam_poses[0].numpy().reshape(-1, 3, 4)
+                # render_poses = np.repeat(render_poses, 120, axis=0)
+                # # render_poses = generate_spiral_path(
+                # #     per_cam_poses.numpy(), per_cam_near_fars.numpy(), n_frames=120,
+                # #     n_rots=2, zrate=0.5, dt=self.near_scaling, percentile=60)
+                # self.poses = torch.from_numpy(render_poses).float()
+                # self.per_cam_near_fars = per_cam_near_fars[0].float() #torch.tensor([[0.4, self.ndc_far]])
+                # print(self.poses.shape)
+                # print(self.per_cam_near_fars.shape)
+                # timestamps = torch.arange(0, 120).float() / 119 * 2 - 1
+                # imgs = None
             else:
                 per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_llffvideo_poses(
                     datadir, downsample=self.downsample, split=split, near_scaling=self.near_scaling)

@@ -88,13 +88,13 @@ class Video360Dataset(BaseDataset):
             if split == "render":
                 assert ndc, "Unable to generate render poses without ndc: don't know near-far."
                 per_cam_poses, per_cam_near_fars, intrinsics, _ = load_llffvideo_poses(
-                    datadir, downsample=self.downsample, split='all', near_scaling=self.near_scaling)
+                    datadir, downsample=self.downsample, split='train', near_scaling=self.near_scaling)
                 render_poses = generate_spiral_path(
-                    per_cam_poses.numpy(), per_cam_near_fars.numpy(), n_frames=300,
+                    per_cam_poses.numpy(), per_cam_near_fars.numpy(), n_frames=120,
                     n_rots=2, zrate=0.5, dt=self.near_scaling, percentile=60)
                 self.poses = torch.from_numpy(render_poses).float()
                 self.per_cam_near_fars = torch.tensor([[0.4, self.ndc_far]])
-                timestamps = torch.linspace(0, 299, len(self.poses))
+                timestamps = torch.linspace(0, 120, len(self.poses))
                 imgs = None
             else:
                 per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_llffvideo_poses(

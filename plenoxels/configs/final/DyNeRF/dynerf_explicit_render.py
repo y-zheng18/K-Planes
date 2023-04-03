@@ -6,8 +6,8 @@ config = {
  # Run first for 1 step with data_downsample=4 to generate weights for ray importance sampling
  'data_downsample': 2,
  'data_dirs': ['/viscam/u/yangzheng/fluid'],
- 'contract': False,
- 'ndc': True,
+ 'contract': True,
+ 'ndc': False,
  'ndc_far': 2.6,
  'near_scaling': 0.95,
  'isg': False,

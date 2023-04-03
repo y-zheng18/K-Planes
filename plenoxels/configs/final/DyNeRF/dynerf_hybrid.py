@@ -1,6 +1,6 @@
 config = {
- 'expname': 'nerfluid_hybrid',
- 'logdir': './logs/fluiddynamic',
+ 'expname': 'nerfluid_hybrid_debug',
+ 'logdir': './logs/fluiddynamic_debug',
  'device': 'cuda:0',
 
  # Run first for 1 step with data_downsample=4 to generate weights for ray importance sampling

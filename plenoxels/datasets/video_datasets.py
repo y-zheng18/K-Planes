@@ -96,7 +96,7 @@ class Video360Dataset(BaseDataset):
                 self.poses = poses.float()[0].repeat(120, 1, 1)
                 print('poses', self.poses.shape)
                 if contraction:
-                    self.per_cam_near_fars = per_cam_near_fars.float()[0]
+                    self.per_cam_near_fars = per_cam_near_fars.float()[0][0]
                 else:
                     self.per_cam_near_fars = torch.tensor(
                         [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)

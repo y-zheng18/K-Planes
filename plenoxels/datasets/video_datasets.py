@@ -129,6 +129,9 @@ class Video360Dataset(BaseDataset):
                     self.per_cam_near_fars = torch.tensor(
                         [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
                 timestamps = (timestamps.float() / 119) * 2 - 1
+                print(split)
+                print('poses', self.poses.shape)
+                print('per_cam_near_fars', self.per_cam_near_fars.shape)
             self.global_translation = torch.tensor([0, 0, 2.])
             self.global_scale = torch.tensor([0.5, 0.7, 0.5])
         # Note: timestamps are stored normalized between -1, 1.

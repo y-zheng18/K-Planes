@@ -89,9 +89,11 @@ class Video360Dataset(BaseDataset):
                 assert ndc, "Unable to generate render poses without ndc: don't know near-far."
                 per_cam_poses, per_cam_near_fars, intrinsics, _ = load_llffvideo_poses(
                     datadir, downsample=self.downsample, split='train', near_scaling=self.near_scaling)
-                render_poses = generate_spiral_path(
-                    per_cam_poses.numpy(), per_cam_near_fars.numpy(), n_frames=120,
-                    n_rots=2, zrate=0.5, dt=self.near_scaling, percentile=60)
+                render_poses = per_cam_poses[0].numpy().reshape(-1, 3, 4)
+                render_poses = np.repeat(render_poses, 120, axis=0)
+                # render_poses = generate_spiral_path(
+                #     per_cam_poses.numpy(), per_cam_near_fars.numpy(), n_frames=120,
+                #     n_rots=2, zrate=0.5, dt=self.near_scaling, percentile=60)
                 self.poses = torch.from_numpy(render_poses).float()
                 self.per_cam_near_fars = per_cam_near_fars[0].float() #torch.tensor([[0.4, self.ndc_far]])
                 print(self.poses.shape)

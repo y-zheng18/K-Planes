@@ -1,20 +1,20 @@
 config = {
- 'expname': 'nerfluid_explicit_debug',
+ 'expname': 'nerfluid_explicit_debug_scaled_cam',
  'logdir': './logs/fluiddynamic_corrected_camera',
  'device': 'cuda:0',
 
  # Run first for 1 step with data_downsample=4 to generate weights for ray importance sampling
  'data_downsample': 2,
  'data_dirs': ['/viscam/u/yangzheng/fluid'],
- 'contract': True,
- 'ndc': False,
+ 'contract': False,
+ 'ndc': True,
  'ndc_far': 2.6,
  'near_scaling': 0.95,
  'isg': False,
  'isg_step': -1,
  'ist_step': 50000,
  'keyframes': False,
- 'scene_bbox': [[-1.3, -1.3, -1.3], [1.3, 1.3, 1.3]],
+ 'scene_bbox': [[-3, -3, -3], [3, 3, 3]],
 
  # Optimization settings
  'num_steps': 120001,

@@ -106,10 +106,10 @@ def load_pinf_frame_data(basedir, half_res=False, split='train'):
                 if 'transform_matrix_list' in train_video else train_video['transform_matrix']).astype(np.float32)
             # locally rotate R with Z axis by 90 degree
             p[:3, :3] = p[:3, :3] @ R0
-            # p[:3, 3] *= 10
+            p[:3, 3] *= 10
             # p[3, 3] += 5
-            # rt = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 5, 1]])
-            # p = rt @ p
+            rt = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 5, 1]])
+            p = rt @ p
             all_poses.append(p)
 
     imgs = np.stack(all_imgs, 0)  # [V, T, H, W, 3]

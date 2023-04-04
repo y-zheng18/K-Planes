@@ -488,7 +488,7 @@ def load_llffvideo_poses(datadir: str,
     if split == 'train':
         split_ids = np.arange(1, poses.shape[0])
     elif split == 'test':
-        split_ids = np.array([1])
+        split_ids = np.array([0])
     else:
         split_ids = np.arange(poses.shape[0])
     if 'coffee_martini' in datadir:

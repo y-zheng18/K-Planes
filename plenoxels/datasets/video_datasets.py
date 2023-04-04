@@ -66,33 +66,7 @@ class Video360Dataset(BaseDataset):
 
         if dset_type == "fluid":
             print("Loading fluid poses")
-            # per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_fluidvideo_poses(
-            #     datadir, downsample=self.downsample, split=split)
-            # if split == 'test':
-            #     keyframes = False
-            # poses, imgs, timestamps, self.median_imgs = load_llffvideo_data(
-            #     videopaths=videopaths, cam_poses=per_cam_poses, intrinsics=intrinsics,
-            #     split=split, keyframes=keyframes, keyframes_take_each=30)
-            # self.poses = poses.float()
-            # if contraction:
-            #     self.per_cam_near_fars = per_cam_near_fars.float()
-            # else:
-            #     self.per_cam_near_fars = torch.tensor(
-            #         [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
-            # timestamps = (timestamps.float() / 119) * 2 - 1
-            # self.global_translation = torch.tensor([0, 0, 2.])
-            # self.global_scale = torch.tensor([0.5, 0.7, 0.5])
-            # else:
-            #     self.per_cam_near_fars = torch.tensor(
-            #         [[0.0, self.ndc_far]]).repeat(per_cam_near_fars.shape[0], 1)
             if split == "render":
-                # per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_llffvideo_poses(
-                #     datadir, downsample=self.downsample, split='test', near_scaling=self.near_scaling)
-                # keyframes = False
-                # poses, imgs, timestamps, self.median_imgs = load_llffvideo_data(
-                #     videopaths=videopaths, cam_poses=per_cam_poses, intrinsics=intrinsics,
-                #     split='test', keyframes=keyframes, keyframes_take_each=30)
-                # self.poses = poses.float()
 
                 per_cam_poses, per_cam_near_fars, intrinsics, _ = load_llffvideo_poses(
                     datadir, downsample=self.downsample, split='all', near_scaling=self.near_scaling)
@@ -112,24 +86,10 @@ class Video360Dataset(BaseDataset):
 
                 print(self.poses.shape)
                 print(self.per_cam_near_fars.shape)
-                # timestamps = (timestamps.float() / 119) * 2 - 1
-                # assert ndc, "Unable to generate render poses without ndc: don't know near-far."
-                # per_cam_poses, per_cam_near_fars, intrinsics, _ = load_llffvideo_poses(
-                #     datadir, downsample=self.downsample, split='train', near_scaling=self.near_scaling)
-                # render_poses = per_cam_poses[0].numpy().reshape(-1, 3, 4)
-                # render_poses = np.repeat(render_poses, 120, axis=0)
-                # # render_poses = generate_spiral_path(
-                # #     per_cam_poses.numpy(), per_cam_near_fars.numpy(), n_frames=120,
-                # #     n_rots=2, zrate=0.5, dt=self.near_scaling, percentile=60)
-                # self.poses = torch.from_numpy(render_poses).float()
-                # self.per_cam_near_fars = per_cam_near_fars[0].float() #torch.tensor([[0.4, self.ndc_far]])
-                # print(self.poses.shape)
-                # print(self.per_cam_near_fars.shape)
-                # timestamps = torch.arange(0, 120).float() / 119 * 2 - 1
-                # imgs = None
             else:
-                per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_llffvideo_poses(
-                    datadir, downsample=self.downsample, split=split, near_scaling=self.near_scaling)
+                assert not ndc, "Fluid dataset does not support ndc."
+                per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_fluidvideo_poses(
+                    datadir, downsample=self.downsample, split=split)
                 if split == 'test':
                     keyframes = False
                 poses, imgs, timestamps, self.median_imgs = load_llffvideo_data(
@@ -486,9 +446,9 @@ def load_llffvideo_poses(datadir: str,
 
     # The first camera is reserved for testing, following https://github.com/facebookresearch/Neural_3D_Video/releases/tag/v1.0
     if split == 'train':
-        split_ids = np.arange(0, poses.shape[0] - 1)
+        split_ids = np.arange(1, poses.shape[0])
     elif split == 'test':
-        split_ids = np.array([poses.shape[0] - 1])
+        split_ids = np.array([0])
     else:
         split_ids = np.arange(poses.shape[0])
     if 'coffee_martini' in datadir:
@@ -501,10 +461,11 @@ def load_llffvideo_poses(datadir: str,
 
     return poses, near_fars, intrinsics, videopaths
 
+
 def load_fluidvideo_poses(datadir: str,
                          downsample: float,
                          split: str) -> Tuple[
-                            torch.Tensor, torch.Tensor, Intrinsics, List[str]]:
+                         torch.Tensor, torch.Tensor, Intrinsics, List[str]]:
     """Load poses and metadata for LLFF video.
 
     Args:

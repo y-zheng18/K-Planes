@@ -49,7 +49,7 @@ def load_pinf_frame_data(basedir, half_res=False, split='train'):
     all_imgs = []
     all_poses = []
 
-    c2w = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]])
+    c2w = np.array([[-1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])
     R0 = np.array([[0, 1, 0], [-1, 0, 0], [0, 0, 1]])
 
     with open(os.path.join(basedir, 'info.json'), 'r') as fp:
@@ -105,7 +105,7 @@ def load_pinf_frame_data(basedir, half_res=False, split='train'):
                 train_video['transform_matrix_list'][frame_i]
                 if 'transform_matrix_list' in train_video else train_video['transform_matrix']).astype(np.float32)
             # locally rotate R with Z axis by 90 degree
-            p[:3, :3] = p[:3, :3] @ R0
+            # p[:3, :3] = p[:3, :3] @ R0
             # p[:3, 3] *= 10
             # # p[3, 3] += 5
             # rt = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 5, 1]])

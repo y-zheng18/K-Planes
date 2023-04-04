@@ -486,7 +486,7 @@ def load_llffvideo_poses(datadir: str,
 
     # The first camera is reserved for testing, following https://github.com/facebookresearch/Neural_3D_Video/releases/tag/v1.0
     if split == 'train':
-        split_ids = np.arange(1, poses.shape[0])
+        split_ids = np.arange(0, poses.shape[0])
     elif split == 'test':
         split_ids = np.array([0])
     else:

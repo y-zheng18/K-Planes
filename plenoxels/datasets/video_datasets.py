@@ -146,7 +146,7 @@ class Video360Dataset(BaseDataset):
                 print(split)
                 print('poses', self.poses.shape)
                 print('per_cam_near_fars', self.per_cam_near_fars.shape)
-            self.global_translation = torch.tensor([0, 0, 2.])
+            self.global_translation = torch.tensor([0, 0, 0.5])
             self.global_scale = torch.tensor([0.5, 0.7, 0.5])
         # Note: timestamps are stored normalized between -1, 1.
         elif dset_type == "llff":

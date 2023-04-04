@@ -106,10 +106,10 @@ def load_pinf_frame_data(basedir, half_res=False, split='train'):
                 if 'transform_matrix_list' in train_video else train_video['transform_matrix']).astype(np.float32)
             # locally rotate R with Z axis by 90 degree
             p[:3, :3] = p[:3, :3] @ R0
-            p[:3, 3] *= 10
-            # p[3, 3] += 5
-            rt = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 5, 1]])
-            p = rt @ p
+            # p[:3, 3] *= 10
+            # # p[3, 3] += 5
+            # rt = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 5, 1]])
+            # p = rt @ p
             all_poses.append(p)
 
     imgs = np.stack(all_imgs, 0)  # [V, T, H, W, 3]
@@ -143,6 +143,7 @@ if __name__ == '__main__':
     near_far = np.stack([near, far], axis=-1)
     near_far = np.repeat(near_far[None, :], poses.shape[0], axis=0)
     camera_params_train = np.concatenate([camera_info.reshape((4, -1)), near_far.reshape((4, -1))], axis=-1)
+    print('train', poses, hwf, near_far)
 
     r_test = load_pinf_frame_data('/Users/yangzheng/code/project/smoke/data', split='test')
     poses = r_test[1]
@@ -155,6 +156,7 @@ if __name__ == '__main__':
     near_far = np.stack([near, far], axis=-1)
     near_far = np.repeat(near_far[None, :], poses.shape[0], axis=0)
     camera_params_test = np.concatenate([camera_info.reshape((1, -1)), near_far.reshape((1, -1))], axis=-1)
+    print('test', poses, hwf, near_far)
 
     camera_params = np.concatenate([camera_params_test, camera_params_train], axis=0)
     print(camera_params.shape)

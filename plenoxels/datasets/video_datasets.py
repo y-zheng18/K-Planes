@@ -300,6 +300,7 @@ class Video360Dataset(BaseDataset):
                  f"{len(torch.unique(timestamps))} timestamps. Near-far: {self.per_cam_near_fars}. "
                  f"ISG={self.isg}, IST={self.ist}, weights_subsampled={self.weights_subsampled}. "
                  f"Sampling without replacement={self.use_permutation}. {intrinsics}")
+        log.info(f"Poses: {self.poses}")
 
     def enable_isg(self):
         self.isg = True

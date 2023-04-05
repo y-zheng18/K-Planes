@@ -89,20 +89,30 @@ class Video360Dataset(BaseDataset):
             else:
                 assert not contraction, "Synthetic video dataset does not work with contraction."
                 assert not ndc, "Synthetic video dataset does not work with NDC."
-                per_cam_poses, intrinsics, videopaths = load_fluidvideo_poses(datadir, split=split)
-                if split == 'test':
-                    keyframes = False
-                poses, imgs, timestamps, self.median_imgs = load_llffvideo_data(
-                    videopaths=videopaths, cam_poses=per_cam_poses, intrinsics=intrinsics,
-                    split=split, keyframes=keyframes, keyframes_take_each=30)
-                self.poses = poses.float()
-                # self.per_cam_near_fars = per_cam_near_fars.float()
-
+                # per_cam_poses, intrinsics, videopaths = load_fluidvideo_poses(datadir, split=split)
+                # if split == 'test':
+                #     keyframes = False
+                # poses, imgs, timestamps, self.median_imgs = load_llffvideo_data(
+                #     videopaths=videopaths, cam_poses=per_cam_poses, intrinsics=intrinsics,
+                #     split=split, keyframes=keyframes, keyframes_take_each=30)
+                # self.poses = poses.float()
+                # # self.per_cam_near_fars = per_cam_near_fars.float()
+                #
+                # self.per_cam_near_fars = torch.tensor([[2.0, 6.0]])
+                # timestamps = (timestamps.float() / 84) * 2 - 1
+                # print(split)
+                # print('poses', self.poses.shape)
+                # print('per_cam_near_fars', self.per_cam_near_fars.shape)
+                frames, transform = load_360video_frames(
+                    datadir, split, max_cameras=self.max_cameras, max_tsteps=self.max_tsteps)
+                imgs, self.poses = load_360_images(frames, datadir, split, self.downsample)
+                timestamps = torch.tensor(
+                    [fetch_360vid_info(f)[0] for f in frames], dtype=torch.float32)
+                img_h, img_w = imgs[0].shape[:2]
                 self.per_cam_near_fars = torch.tensor([[2.0, 6.0]])
-                timestamps = (timestamps.float() / 84) * 2 - 1
-                print(split)
-                print('poses', self.poses.shape)
-                print('per_cam_near_fars', self.per_cam_near_fars.shape)
+                timestamps = timestamps * 2 - 1
+                intrinsics = load_360_intrinsics(
+                    transform, img_h=img_h, img_w=img_w, downsample=self.downsample)
             # self.global_translation = torch.tensor([0, 0, 2])
             # self.global_scale = torch.tensor([0.5, 0.6, 0.5])
         # Note: timestamps are stored normalized between -1, 1.

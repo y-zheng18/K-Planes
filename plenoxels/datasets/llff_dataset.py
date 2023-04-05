@@ -150,29 +150,12 @@ def load_llff_poses_helper(datadir: str, downsample: float, near_scaling: float)
 
     return poses, near_fars, intrinsics
 
-def load_fluid_poses_helper(datadir: str, downsample: float) -> Tuple[np.ndarray, np.ndarray, Intrinsics]:
-    poses_bounds = np.load(os.path.join(datadir, 'poses_bounds.npy'))  # (N_images, 17)
-    poses, near_fars, intrinsics = _split_poses_bounds(poses_bounds)
+def load_fluid_poses_helper(datadir: str) -> Tuple[np.ndarray, any]:
+    # poses_bounds = np.load(os.path.join(datadir, 'poses_bounds.npy'))  # (N_images, 17)
+    f = json.load(open(os.path.join(datadir, 'info.json')))
+    poses = np.stack([np.array(f['frames'][i]['transform_matrix']) for i in range(len(f['frames']))])
 
-    # Step 1: rescale focal length according to training resolution
-    intrinsics.scale(1 / downsample)
-
-    # # Step 2: correct poses
-    # # Original poses has rotation in form "down right back", change to "right up back"
-    # # See https://github.com/bmild/nerf/issues/34
-    # poses = np.concatenate([poses[..., 1:2], -poses[..., :1], poses[..., 2:4]], -1)
-    # # (N_images, 3, 4) exclude H, W, focal
-    # poses, pose_avg = center_poses(poses)
-    #
-    # # Step 3: correct scale so that the nearest depth is at a little more than 1.0
-    # # See https://github.com/bmild/nerf/issues/34
-    # near_original = np.min(near_fars)
-    # scale_factor = near_original * near_scaling  # 0.75 is the default parameter
-    # # the nearest depth is at 1/0.75=1.33
-    # near_fars /= scale_factor
-    # poses[..., 3] /= scale_factor
-
-    return poses, near_fars, intrinsics
+    return poses, f
 
 def load_llff_poses(datadir: str,
                     downsample: float,

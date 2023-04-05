@@ -87,9 +87,9 @@ class Video360Dataset(BaseDataset):
                 print(self.poses.shape)
                 print(self.per_cam_near_fars.shape)
             else:
-                assert not ndc, "Fluid dataset does not support ndc."
-                per_cam_poses, per_cam_near_fars, intrinsics, videopaths = load_fluidvideo_poses(
-                    datadir, downsample=self.downsample, split=split)
+                assert not contraction, "Synthetic video dataset does not work with contraction."
+                assert not ndc, "Synthetic video dataset does not work with NDC."
+                per_cam_poses, intrinsics, videopaths = load_fluidvideo_poses(datadir, split=split)
                 if split == 'test':
                     keyframes = False
                 poses, imgs, timestamps, self.median_imgs = load_llffvideo_data(
@@ -98,7 +98,7 @@ class Video360Dataset(BaseDataset):
                 self.poses = poses.float()
                 # self.per_cam_near_fars = per_cam_near_fars.float()
 
-                self.per_cam_near_fars = torch.tensor([[0.2, 2.6]])
+                self.per_cam_near_fars = torch.tensor([[2.0, 6.0]])
                 timestamps = (timestamps.float() / 84) * 2 - 1
                 print(split)
                 print('poses', self.poses.shape)
@@ -461,9 +461,8 @@ def load_llffvideo_poses(datadir: str,
 
 
 def load_fluidvideo_poses(datadir: str,
-                         downsample: float,
                          split: str) -> Tuple[
-                         torch.Tensor, torch.Tensor, Intrinsics, List[str]]:
+                         torch.Tensor, Intrinsics, List[str]]:
     """Load poses and metadata for LLFF video.
 
     Args:
@@ -478,7 +477,14 @@ def load_fluidvideo_poses(datadir: str,
         Intrinsics: The camera intrinsics. These are the same for every camera.
         List[str]: List of length N containing the path to each camera's data.
     """
-    poses, near_fars, intrinsics = load_fluid_poses_helper(datadir, downsample)
+    poses, meta = load_fluid_poses_helper(datadir)
+
+    H, W = 800, 800
+    angle_x = meta['camera_angle_x']
+    focal = W / (2 * np.tan(angle_x / 2))
+
+    intrinsics = Intrinsics(
+        width=W, height=H, focal_x=focal, focal_y=focal, center_x=W / 2, center_y=H / 2)
 
     videopaths = np.array(glob.glob(os.path.join(datadir, '*.mp4')))  # [n_cameras]
     assert poses.shape[0] == len(videopaths), \
@@ -492,15 +498,10 @@ def load_fluidvideo_poses(datadir: str,
         split_ids = np.array([0])
     else:
         split_ids = np.arange(poses.shape[0])
-    if 'coffee_martini' in datadir:
-        # https://github.com/fengres/mixvoxels/blob/0013e4ad63c80e5f14eb70383e2b073052d07fba/dataLoader/llff_video.py#L323
-        log.info(f"Deleting unsynchronized camera from coffee-martini video.")
-        split_ids = np.setdiff1d(split_ids, 12)
     poses = torch.from_numpy(poses[split_ids])
-    near_fars = torch.from_numpy(near_fars[split_ids])
     videopaths = videopaths[split_ids].tolist()
 
-    return poses, near_fars, intrinsics, videopaths
+    return poses, intrinsics, videopaths
 
 
 def load_llffvideo_data(videopaths: List[str],

@@ -3,7 +3,7 @@ config = {
  'logdir': './logs/fluiddynamic_syn_camera_test',
  'device': 'cuda:0',
 
- 'data_downsample': 2.0,
+ 'data_downsample': 1.0,
  'data_dirs': ['/viscam/u/yangzheng/test_fluid'],
  'contract': False,
  'ndc': False,
@@ -11,7 +11,7 @@ config = {
  'isg_step': -1,
  'ist_step': -1,
  'keyframes': False,
- 'scene_bbox': [[-1, -1, -1], [1, 1, 1]],
+ 'scene_bbox': [[-1.5, -1.5, -1.5], [1.5, 1.5, 1.5]],
 
  # Optimization settings
  'num_steps': 30001,

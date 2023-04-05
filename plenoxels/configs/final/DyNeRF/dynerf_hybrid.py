@@ -1,11 +1,11 @@
 config = {
- 'expname': 'nerfluid_hybrid_debug',
- 'logdir': './logs/fluiddynamic_debug',
+ 'expname': 'nerfluid_hybrid',
+ 'logdir': './logs/fluiddynamic',
  'device': 'cuda:0',
 
  # Run first for 1 step with data_downsample=4 to generate weights for ray importance sampling
- 'data_downsample': 2,
- 'data_dirs': ['/viscam/u/yangzheng/fluid'],
+ 'data_downsample': 4,
+ 'data_dirs': ['/viscam/u/yangzheng/dynerf/cut_roasted_beef'],
  'contract': False,
  'ndc': True,
  'ndc_far': 2.6,

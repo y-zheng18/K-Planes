@@ -78,7 +78,7 @@ def _load_nerf_image_pose(idx: int,
     # We only do the low-pass filtering if resolution * 2 is lower-res than out_h, out_w
     if out_h != out_w:
         log.warning("360 non-square")
-    img = img.resize((out_w, out_h), Image.LANCZOS)
+    img = img.resize((out_h, out_w), Image.LANCZOS)
     img = pil2tensor(img)  # [C, H, W]
     img = img.permute(1, 2, 0)  # [H, W, C]
 

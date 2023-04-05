@@ -1,10 +1,10 @@
 config = {
  'expname': 'nerfluid_explicit_debug',
- 'logdir': './logs/fluiddynamic_syn_camera',
+ 'logdir': './logs/fluiddynamic_syn_camera_test',
  'device': 'cuda:0',
 
  'data_downsample': 2.0,
- 'data_dirs': ['/viscam/u/yangzheng/fluid'],
+ 'data_dirs': ['/viscam/u/yangzheng/test'],
  'contract': False,
  'ndc': False,
  'isg': False,

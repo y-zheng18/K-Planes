@@ -106,7 +106,7 @@ class Video360Dataset(BaseDataset):
                 frames, transform = load_360video_frames(
                     datadir, split, max_cameras=self.max_cameras, max_tsteps=self.max_tsteps)
                 imgs, self.poses = load_360_images(frames, datadir, split, self.downsample)
-                print(imgs.shape)
+                # print(imgs.shape)
                 timestamps = torch.tensor(
                     [fetch_360vid_info(f)[0] for f in frames], dtype=torch.float32)
                 img_h, img_w = imgs[0].shape[:2]

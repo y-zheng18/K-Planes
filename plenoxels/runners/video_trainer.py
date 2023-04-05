@@ -112,7 +112,7 @@ class VideoTrainer(BaseTrainer):
         pb = tqdm(total=len(dataset), desc=f"Test scene ({dataset.name})")
         for img_idx, data in enumerate(dataset):
             preds = self.eval_step(data)
-            print(data["imgs"].shape)
+            # print(data["imgs"].shape)
             out_metrics, out_img, out_depth = self.evaluate_metrics(
                 data["imgs"], preds, dset=dataset, img_idx=img_idx, name=None,
                 save_outputs=self.save_outputs)

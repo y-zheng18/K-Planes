@@ -134,7 +134,7 @@ if __name__ == "__main__":
 
     print("argsv:{0}".format(argv))
     parser = argparse.ArgumentParser(description='Render scene.')
-    parser.add_argument('--scratch_dir', type=str, metavar='PATH', default='/Users/yangzheng/code/project/smoke/test_fluid_new/')
+    parser.add_argument('--scratch_dir', type=str, metavar='PATH', default='/Users/yangzheng/code/project/smoke/test_fluid_cam/')
     parser.add_argument('--split', type=str, default='val')
     parser.add_argument('--use_gpu', action='store_true', default=False)
     parser.add_argument('--render_engine', type=str, default='BLENDER_EEVEE', choices=['BLENDER_EEVEE', 'CYCLES'])

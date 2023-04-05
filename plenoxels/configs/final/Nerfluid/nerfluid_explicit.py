@@ -1,10 +1,10 @@
 config = {
- 'expname': 'human_explicit_debug',
+ 'expname': 'human_explicit_debug_fluid',
  'logdir': './logs/human_syn_debug',
  'device': 'cuda:0',
 
  'data_downsample': 2.0,
- 'data_dirs': ['/viscam/u/yangzheng/test_fluid_new'],
+ 'data_dirs': ['/viscam/u/yangzheng/test_fluid_cam'],
  'contract': False,
  'ndc': False,
  'isg': False,

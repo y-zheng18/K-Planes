@@ -235,6 +235,7 @@ class BaseTrainer(abc.ABC):
             .cpu()
             .clamp(0, 1)
         )
+        print('pred', preds_rgb.shape)
         if not torch.isfinite(preds_rgb).all():
             log.warning(f"Predictions have {torch.isnan(preds_rgb).sum()} NaNs, "
                         f"{torch.isinf(preds_rgb).sum()} infs.")

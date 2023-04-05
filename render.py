@@ -13,8 +13,8 @@ from mathutils import *
 from math import *
 
 
-RESULOUTION_X = 800
-RESULOUTION_Y = 800
+RESULOUTION_X = 1080
+RESULOUTION_Y = 1920
 
 # randomize np seed using time
 np.random.seed(int(time.time()))
@@ -135,7 +135,7 @@ if __name__ == "__main__":
     print("argsv:{0}".format(argv))
     parser = argparse.ArgumentParser(description='Render scene.')
     parser.add_argument('--scratch_dir', type=str, metavar='PATH', default='/Users/yangzheng/code/project/smoke/test_fluid_cam/')
-    parser.add_argument('--split', type=str, default='val')
+    parser.add_argument('--split', type=str, default='train')
     parser.add_argument('--use_gpu', action='store_true', default=False)
     parser.add_argument('--render_engine', type=str, default='BLENDER_EEVEE', choices=['BLENDER_EEVEE', 'CYCLES'])
     args = parser.parse_args(argv)

@@ -96,8 +96,9 @@ class Video360Dataset(BaseDataset):
                     videopaths=videopaths, cam_poses=per_cam_poses, intrinsics=intrinsics,
                     split=split, keyframes=keyframes, keyframes_take_each=30)
                 self.poses = poses.float()
-                self.per_cam_near_fars = per_cam_near_fars.float()
+                # self.per_cam_near_fars = per_cam_near_fars.float()
 
+                self.per_cam_near_fars = torch.tensor([[0.4, 2.6]])
                 timestamps = (timestamps.float() / 119) * 2 - 1
                 print(split)
                 print('poses', self.poses.shape)

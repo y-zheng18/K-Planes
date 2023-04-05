@@ -109,7 +109,7 @@ class Video360Dataset(BaseDataset):
                 print(imgs.shape)
                 timestamps = torch.tensor(
                     [fetch_360vid_info(f)[0] for f in frames], dtype=torch.float32)
-                img_h, img_w = imgs[0].shape[:2]
+                img_w, img_h = imgs[0].shape[:2]
                 self.per_cam_near_fars = torch.tensor([[2.0, 6.0]])
                 timestamps = timestamps * 2 - 1
                 intrinsics = load_360_intrinsics(

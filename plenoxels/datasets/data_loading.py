@@ -71,9 +71,9 @@ def _load_nerf_image_pose(idx: int,
         return None
     img = Image.open(f_path)
     if out_h is None:
-        out_h = int(img.size[0] / downsample)
+        out_h = int(img.size[0] / 4)
     if out_w is None:
-        out_w = int(img.size[1] / downsample)
+        out_w = int(img.size[1] / 4)
     # Now we should downsample to out_h, out_w and low-pass filter to resolution * 2.
     # We only do the low-pass filtering if resolution * 2 is lower-res than out_h, out_w
 

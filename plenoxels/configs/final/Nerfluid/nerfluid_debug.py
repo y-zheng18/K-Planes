@@ -1,5 +1,5 @@
 config = {
- 'expname': 'explicit_fluid_new',
+ 'expname': 'explicit_fluid_new_highres',
  'logdir': './logs/fluid_debug',
  'device': 'cuda:0',
 

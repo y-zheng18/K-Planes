@@ -49,7 +49,7 @@ def load_pinf_frame_data(basedir, half_res=False, split='train'):
     all_imgs = []
     all_poses = []
 
-    c2w = np.array([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])
+    c2w = np.array([[-1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])  #np.array([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])
     R0 = np.array([[0, 1, 0], [-1, 0, 0], [0, 0, 1]])
 
     with open(os.path.join(basedir, 'info.json'), 'r') as fp:
@@ -161,4 +161,4 @@ if __name__ == '__main__':
     camera_params = np.concatenate([camera_params_test, camera_params_train], axis=0)
     print(camera_params.shape)
     print(camera_params)
-    np.save('/Users/yangzheng/code/project/smoke/data/poses_bounds.npy', camera_params)
+    np.save('/Users/yangzheng/code/project/smoke/data/poses_bounds_.npy', camera_params)

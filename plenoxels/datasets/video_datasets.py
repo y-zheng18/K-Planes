@@ -83,7 +83,7 @@ class Video360Dataset(BaseDataset):
                 render_timesteps = np.arange(sp_n) / (sp_n - 1)
                 self.poses = render_poses.float()
                 timestamps = torch.from_numpy(render_timesteps).float() * 2 - 1
-                self.per_cam_near_fars = torch.tensor([[3, 6.0]])
+                self.per_cam_near_fars = torch.tensor([[3.5, 6.0]])
                 frames, transform = load_360video_frames(
                     datadir, 'train', max_cameras=self.max_cameras, max_tsteps=self.max_tsteps)
                 imgs, _ = load_360_images(frames, datadir, 'train', self.downsample)
@@ -132,7 +132,7 @@ class Video360Dataset(BaseDataset):
                 timestamps = torch.tensor(
                     [fetch_360vid_info(f)[0] for f in frames], dtype=torch.float32)
                 img_h, img_w = imgs[0].shape[:2]
-                self.per_cam_near_fars = torch.tensor([[3, 6.0]])
+                self.per_cam_near_fars = torch.tensor([[3.5, 6.0]])
                 timestamps = timestamps * 2 - 1
                 intrinsics = load_360_intrinsics(
                     transform, img_h=img_h, img_w=img_w, downsample=self.downsample)

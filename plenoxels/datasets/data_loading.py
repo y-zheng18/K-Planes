@@ -95,8 +95,8 @@ def _load_nerf_image_pose(idx: int,
         mask = img.sum(dim=2) > 0.08
         mask = mask.float()
         mask = mask.unsqueeze(2)
-        img = img * mask + (1 - mask) * 1
-        # img = torch.cat([img, mask.unsqueeze(2)], dim=2)
+        # img = img * mask + (1 - mask) * 1
+        img = torch.cat([img, mask.unsqueeze(2)], dim=2)
         # img = 1 - img
     assert img.shape[0] == img.shape[1]
     # assert img.shape[2] == 4

@@ -11,7 +11,7 @@ config = {
  'isg_step': -1,
  'ist_step': -1,
  'keyframes': False,
- 'scene_bbox': [[-1.5, -1.5, -1], [1.5, 1.5, 2]],
+ 'scene_bbox': [[0, 0, -1], [2, 2, 2]],
 
  # Optimization settings
  'num_steps': 30001,

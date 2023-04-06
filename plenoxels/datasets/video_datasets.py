@@ -70,6 +70,7 @@ class Video360Dataset(BaseDataset):
                 frames, transform = load_360video_frames(
                     datadir, 'train', max_cameras=self.max_cameras, max_tsteps=self.max_tsteps)
                 imgs, poses = load_360_images(frames, datadir, 'train', self.downsample)
+                print(poses.shape)
                 per_cam_near_fars = torch.tensor([[1.5, 6.0]])
                 render_poses = generate_spiral_path(
                     poses.numpy(), per_cam_near_fars.numpy(), n_frames=120,

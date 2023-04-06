@@ -347,7 +347,7 @@ class Video360Dataset(BaseDataset):
         out['bg_color'] = bg_color
         # Alpha compositing
         print(imgs.shape)
-        print(imgs.max(), imgs.min()
+        print(imgs.max(), imgs.min())
         if imgs is not None and imgs.shape[-1] == 4:
             imgs = imgs[:, :3] * imgs[:, 3:] + bg_color * (1.0 - imgs[:, 3:])
         # else:

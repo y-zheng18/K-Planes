@@ -21,7 +21,7 @@ import numpy as np
 # cv2.imshow('img', img)
 # cv2.waitKey(0)
 
-img = cv2.imread('/Users/yangzheng/code/project/smoke/fluid_debug/train/r_130.png')
+img = cv2.imread('/Users/yangzheng/code/project/smoke/test_fluid_cam/train0/r_130.png')
 mask = img.sum(axis=2) > 20
 
 mask = mask * 255

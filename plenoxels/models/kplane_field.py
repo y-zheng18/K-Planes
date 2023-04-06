@@ -222,6 +222,7 @@ class KPlaneField(nn.Module):
             pts = self.spatial_distortion(pts)
             pts = pts / 2  # from [-2, 2] to [-1, 1]
         else:
+            print("No spatial distortion")
             pts = normalize_aabb(pts, self.aabb)
         n_rays, n_samples = pts.shape[:2]
         if timestamps is not None:

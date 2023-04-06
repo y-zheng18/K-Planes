@@ -32,8 +32,8 @@ def pose_spherical(theta, phi, radius, rotZ=True, wx=0.0, wy=0.0, wz=0.0):
     c2w = rot_phi(phi / 180. * np.pi) @ c2w
     c2w = rot_theta(theta / 180. * np.pi) @ c2w
     if rotZ:  # swap yz, and keep right-hand
-        c2w = torch.Tensor(np.array([[-1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])) @ c2w
-
+        # c2w = torch.Tensor(np.array([[-1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])) @ c2w
+        c2w = torch.Tensor(np.array([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])) @ c2w
     ct = torch.Tensor([
         [1, 0, 0, wx],
         [0, 1, 0, wy],

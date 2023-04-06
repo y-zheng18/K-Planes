@@ -72,7 +72,7 @@ class Video360Dataset(BaseDataset):
                 sp_n = 120  # an even number!
                 phi = 20
                 radius = 4.5
-                rotZ = False
+                rotZ = True
                 r_center = [0.3382070094283088, 0.2609209839653898, 0.38795384153014023]
                 r_center = np.array(r_center) * 3.5
                 sp_poses = [

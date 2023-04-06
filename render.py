@@ -13,8 +13,9 @@ from mathutils import *
 from math import *
 
 
-RESULOUTION_X = 1080
-RESULOUTION_Y = 1920
+RESULOUTION_X = 800
+RESULOUTION_Y = 800
+
 
 # randomize np seed using time
 np.random.seed(int(time.time()))

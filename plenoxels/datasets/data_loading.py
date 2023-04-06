@@ -76,11 +76,20 @@ def _load_nerf_image_pose(idx: int,
         out_w = int(img.size[1] / downsample)
     # Now we should downsample to out_h, out_w and low-pass filter to resolution * 2.
     # We only do the low-pass filtering if resolution * 2 is lower-res than out_h, out_w
-    if out_h != out_w:
-        log.warning("360 non-square")
+
     img = img.resize((out_h, out_w), Image.LANCZOS)
     img = pil2tensor(img)  # [C, H, W]
     img = img.permute(1, 2, 0)  # [H, W, C]
+    if img.shape[0] > img.shape[1]:
+        # zero pad to square
+        pad = (img.shape[0] - img.shape[1]) // 2
+        zeros = torch.zeros((img.shape[0], pad, 3), dtype=torch.float32)
+        img = torch.cat([zeros, img, zeros], dim=1)
+    elif img.shape[1] > img.shape[0]:
+        # zero pad to square
+        pad = (img.shape[1] - img.shape[0]) // 2
+        zeros = torch.zeros((pad, img.shape[1], 3), dtype=torch.float32)
+        img = torch.cat([zeros, img, zeros], dim=0)
 
     pose = torch.tensor(frames[idx]['transform_matrix'], dtype=torch.float32)
 

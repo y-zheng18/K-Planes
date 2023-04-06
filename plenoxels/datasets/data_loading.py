@@ -83,12 +83,12 @@ def _load_nerf_image_pose(idx: int,
     if img.shape[0] > img.shape[1]:
         # zero pad to square
         pad = (img.shape[0] - img.shape[1]) // 2
-        zeros = torch.zeros((img.shape[0], pad, 3), dtype=torch.float32)
+        zeros = torch.zeros((img.shape[0], pad, img.shape[2]), dtype=torch.float32)
         img = torch.cat([zeros, img, zeros], dim=1)
     elif img.shape[1] > img.shape[0]:
         # zero pad to square
         pad = (img.shape[1] - img.shape[0]) // 2
-        zeros = torch.zeros((pad, img.shape[1], 3), dtype=torch.float32)
+        zeros = torch.zeros((pad, img.shape[1], img.shape[2]), dtype=torch.float32)
         img = torch.cat([zeros, img, zeros], dim=0)
 
     pose = torch.tensor(frames[idx]['transform_matrix'], dtype=torch.float32)

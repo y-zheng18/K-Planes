@@ -346,7 +346,7 @@ class Video360Dataset(BaseDataset):
             bg_color = torch.rand((1, 3), dtype=torch.float32, device=dev)
         out['bg_color'] = bg_color
         # Alpha compositing
-        print(imgs.shape)
+        # print(imgs.shape)
         if imgs is not None and imgs.shape[-1] == 4:
             imgs = imgs[:, :3] * imgs[:, 3:] + bg_color * (1.0 - imgs[:, 3:])
         else:

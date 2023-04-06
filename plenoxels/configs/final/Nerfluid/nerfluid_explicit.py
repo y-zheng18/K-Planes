@@ -3,7 +3,7 @@ config = {
  'logdir': './logs/human_syn_debug',
  'device': 'cuda:0',
 
- 'data_downsample': 4.0,
+ 'data_downsample': 2.0,
  'data_dirs': ['/viscam/u/yangzheng/test_fluid_black'],
  'contract': False,
  'ndc': False,
@@ -31,8 +31,8 @@ config = {
  'time_smoothness_weight_proposal_net': 0.001,
 
  # Training settings
- 'valid_every': 5000,
- 'save_every': 5000,
+ 'valid_every': 10000,
+ 'save_every': 10000,
  'save_outputs': True,
  'train_fp16': True,
 

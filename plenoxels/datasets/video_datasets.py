@@ -67,17 +67,18 @@ class Video360Dataset(BaseDataset):
         if dset_type == "fluid":
             print("Loading fluid poses")
             if split == "render":
-                render_poses = torch.stack([
-                    generate_spherical_poses(angle, -30.0, 3.0)
-                    for angle in np.linspace(-180, 180, 120 + 1)[:-1]
-                ], 0)
-                self.poses = render_poses
-                timestamps = torch.linspace(0.0, 1.0, render_poses.shape[0])
                 frames, transform = load_360video_frames(
-                    datadir, 'test', max_cameras=self.max_cameras, max_tsteps=self.max_tsteps)
-                imgs, _ = load_360_images(frames, datadir, 'test', self.downsample)
+                    datadir, 'train', max_cameras=self.max_cameras, max_tsteps=self.max_tsteps)
+                imgs, poses = load_360_images(frames, datadir, 'train', self.downsample)
+                per_cam_near_fars = torch.tensor([[1.5, 6.0]])
+                render_poses = generate_spiral_path(
+                    poses.numpy(), per_cam_near_fars.numpy(), n_frames=120,
+                    n_rots=2, zrate=0.5, dt=self.near_scaling, percentile=60)
                 img_h, img_w = imgs[0].shape[:2]
                 self.per_cam_near_fars = torch.tensor([[1.5, 6.0]])
+
+                timestamps = torch.arange(0, 120).float() / 119 * 2 - 1
+                self.poses = torch.from_numpy(render_poses).float()
                 timestamps = timestamps * 2 - 1
                 intrinsics = load_360_intrinsics(
                     transform, img_h=img_h, img_w=img_w, downsample=self.downsample)

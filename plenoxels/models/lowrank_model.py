@@ -185,7 +185,8 @@ class LowrankModel(nn.Module):
         #       call below, but they will not be used as long as density-field resolutions are 3D.
         ray_samples, weights_list, ray_samples_list = self.proposal_sampler.generate_ray_samples(
             ray_bundle, timestamps=timestamps, density_fns=self.density_fns)
-
+        print("ray_samples", ray_samples.get_positions().shape)
+        print("ray_bundle", ray_bundle.directions.shape)
         field_out = self.field(ray_samples.get_positions(), ray_bundle.directions, timestamps)
         rgb, density = field_out["rgb"], field_out["density"]
 

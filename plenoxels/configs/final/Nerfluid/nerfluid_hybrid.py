@@ -1,5 +1,5 @@
 config = {
- 'expname': 'explicit_fluid_hybrid_5.25',
+ 'expname': 'explicit_fluid_hybrid_debug',
  'logdir': './logs/fluid_debug',
  'device': 'cuda:0',
 
@@ -11,7 +11,7 @@ config = {
  'isg_step': -1,
  'ist_step': -1,
  'keyframes': False,
- 'scene_bbox': [[0, 0, 0], [2, 2, 2]],
+ 'scene_bbox': [[-2, -2, -2], [0, 0, 0]],
 
  # Optimization settings
  'num_steps': 30001,
@@ -31,8 +31,8 @@ config = {
  'time_smoothness_weight_proposal_net': 0.001,
 
  # Training settings
- 'save_every': 10000,
- 'valid_every': 10000,
+ 'save_every': 5000,
+ 'valid_every': 5000,
  'save_outputs': True,
  'train_fp16': True,
 

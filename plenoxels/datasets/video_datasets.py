@@ -73,7 +73,8 @@ class Video360Dataset(BaseDataset):
                 phi = 20
                 radius = 4.5
                 rotZ = False
-                r_center =[0.3382070094283088, 0.38795384153014023, -0.2609209839653898]
+                r_center = [0.3382070094283088, 0.2609209839653898, 0.38795384153014023]
+                r_center = np.array(r_center) * 3.5
                 sp_poses = [
                     pose_spherical(angle, phi, radius, rotZ, r_center[0], r_center[1], r_center[2])
                     for angle in np.linspace(-180, 180, sp_n + 1)[:-1]

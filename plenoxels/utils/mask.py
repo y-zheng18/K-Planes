@@ -22,10 +22,15 @@ import numpy as np
 # cv2.waitKey(0)
 
 img = cv2.imread('/Users/yangzheng/code/project/smoke/fluid_debug/train/r_130.png')
-mask = img.sum(axis=2) > 30
+mask = img.sum(axis=2) > 20
 
 mask = mask * 255
-mask = np.repeat(mask[:, :, np.newaxis], 3, axis=2)
+# mask = np.repeat(mask[:, :, np.newaxis], 3, axis=2)
 mask = mask.astype(np.uint8)
-cv2.imshow('mask', mask)
-cv2.waitKey(0)
+mask = mask[:, :, np.newaxis]
+# cv2.imshow('mask', mask)
+# cv2.waitKey(0)
+img = np.concatenate([img, mask], axis=2)
+print(img.shape)
+# write png
+cv2.imwrite('/Users/yangzheng/code/project/smoke/fluid_debug/train/r_130_mask.png', img)

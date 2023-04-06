@@ -1,10 +1,10 @@
 config = {
- 'expname': 'explicit_fluid',
+ 'expname': 'explicit_fluid_new',
  'logdir': './logs/fluid_debug',
  'device': 'cuda:0',
 
  'data_downsample': 2.0,
- 'data_dirs': ['/viscam/u/yangzheng/fluid_debug'],
+ 'data_dirs': ['/viscam/u/yangzheng/fluid_debug_new'],
  'contract': False,
  'ndc': False,
  'isg': False,

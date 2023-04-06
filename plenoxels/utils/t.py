@@ -16,7 +16,7 @@ fourth_tiled = np.tile(fourth, [len(fluid_poses),1,1])
 fluid_poses = np.concatenate([fluid_poses, fourth_tiled], axis=1)
 fluid_poses[:, :3, 3] = fluid_poses[:, :3, 3] * 3.5
 
-scratch_dir = '/Users/yangzheng/code/project/smoke/fluid_debug'
+scratch_dir = '/Users/yangzheng/code/project/smoke/fluid_debug_new'
 # train set
 new_transform = fluid_poses[1:].tolist()
 f_new['frames'] = []
@@ -38,6 +38,7 @@ for i in range(4):
         new_frame = f['frames'][0].copy()
         new_frame['transform_matrix'] = new_transform[i]
         new_frame['file_path'] = './train/r_{}'.format(str(j + i * 120).zfill(3))
+        new_frame['time'] = j / 119.0
         f_new['frames'].append(new_frame)
         cv2.imwrite(os.path.join(scratch_dir, 'train', 'r_{}'.format(str(j + i * 120).zfill(3)) + '.png'), frames[j])
 
@@ -64,6 +65,7 @@ for i in range(1):
         new_frame = f['frames'][0].copy()
         new_frame['transform_matrix'] = new_transform[i]
         new_frame['file_path'] = './test/r_{}'.format(str(j + i * 120).zfill(3))
+        new_frame['time'] = j / 119.0
         f_new['frames'].append(new_frame)
         cv2.imwrite(os.path.join(scratch_dir, 'test', 'r_{}'.format(str(j + i * 120).zfill(3)) + '.png'), frames[j])
 

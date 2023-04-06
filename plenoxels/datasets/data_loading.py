@@ -99,7 +99,7 @@ def _load_nerf_image_pose(idx: int,
         img = torch.cat([img, mask], dim=2)
         # img = 1 - img
     assert img.shape[0] == img.shape[1]
-    # assert img.shape[2] == 4
+    assert img.shape[2] == 4
     pose = torch.tensor(frames[idx]['transform_matrix'], dtype=torch.float32)
 
     return (img, pose)

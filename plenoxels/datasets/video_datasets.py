@@ -341,12 +341,13 @@ class Video360Dataset(BaseDataset):
 
         imgs = out['imgs']
         # Decide BG color
-        bg_color = torch.ones((1, 3), dtype=torch.float32, device=dev) * 0
+        bg_color = torch.ones((1, 3), dtype=torch.float32, device=dev)
         if self.split == 'train' and imgs.shape[-1] == 4:
-            bg_color = torch.rand((1, 3), dtype=torch.float32, device=dev) * 0
-        out['bg_color'] = None #bg_color * 0
+            bg_color = torch.rand((1, 3), dtype=torch.float32, device=dev)
+        out['bg_color'] = bg_color
         # Alpha compositing
-        # print(imgs.shape)
+        print(imgs.shape)
+        print(imgs.max(), imgs.min()
         if imgs is not None and imgs.shape[-1] == 4:
             imgs = imgs[:, :3] * imgs[:, 3:] + bg_color * (1.0 - imgs[:, 3:])
         # else:

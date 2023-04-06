@@ -3,6 +3,7 @@ config = {
  'logdir': './logs/human_syn_debug',
  'device': 'cuda:0',
 
+
  'data_downsample': 2.0,
  'data_dirs': ['/viscam/u/yangzheng/test_fluid_black'],
  'contract': False,

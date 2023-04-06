@@ -1,5 +1,5 @@
 config = {
- 'expname': 'human_explicit_debug_fluid',
+ 'expname': 'human_explicit_debug_square_cam',
  'logdir': './logs/human_syn_debug',
  'device': 'cuda:0',
 

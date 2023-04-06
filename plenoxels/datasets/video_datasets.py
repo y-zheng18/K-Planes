@@ -17,6 +17,7 @@ from .llff_dataset import load_llff_poses_helper, load_fluid_poses_helper
 from .ray_utils import (
     generate_spherical_poses, create_meshgrid, stack_camera_dirs, get_rays, generate_spiral_path
 )
+from .fluid_data import pose_spherical
 from .synthetic_nerf_dataset import (
     load_360_images, load_360_intrinsics,
 )
@@ -67,24 +68,27 @@ class Video360Dataset(BaseDataset):
         if dset_type == "fluid":
             print("Loading fluid poses")
             if split == "render":
-                frames, transform = load_360video_frames(
-                    datadir, 'train', max_cameras=self.max_cameras, max_tsteps=self.max_tsteps)
-                imgs, poses = load_360_images(frames, datadir, 'train', self.downsample)
-                print(poses.shape)
-                per_cam_near_fars = torch.tensor([[1.5, 6.0]])
-                render_poses = generate_spiral_path(
-                    poses.numpy(), per_cam_near_fars.numpy(), n_frames=120,
-                    n_rots=2, zrate=0.5, dt=self.near_scaling, percentile=60)
-                img_h, img_w = imgs[0].shape[:2]
-                self.per_cam_near_fars = torch.tensor([[1.5, 6.0]])
 
-                timestamps = torch.arange(0, 120).float() / 119 * 2 - 1
-                self.poses = torch.from_numpy(render_poses).float()
-                timestamps = timestamps * 2 - 1
+                sp_n = 120  # an even number!
+                phi = 20
+                radius = 4.5
+                rotZ = False
+                r_center =[0.3382070094283088, 0.38795384153014023, -0.2609209839653898]
+                sp_poses = [
+                    pose_spherical(angle, phi, radius, rotZ, r_center[0], r_center[1], r_center[2])
+                    for angle in np.linspace(-180, 180, sp_n + 1)[:-1]
+                ]
+                render_poses = torch.stack(sp_poses, 0)  # [sp_poses[36]]*sp_n, for testing a single pose
+                render_timesteps = np.arange(sp_n) / (sp_n - 1)
+                self.poses = render_poses.float()
+                timestamps = torch.from_numpy(render_timesteps).float() * 2 - 1
+                self.per_cam_near_fars = torch.tensor([[1.5, 6.0]])
+                frames, transform = load_360video_frames(
+                    datadir, split, max_cameras=self.max_cameras, max_tsteps=self.max_tsteps)
+                imgs, _ = load_360_images(frames, datadir, split, self.downsample)
+                img_h, img_w = imgs[0].shape[:2]
                 intrinsics = load_360_intrinsics(
                     transform, img_h=img_h, img_w=img_w, downsample=self.downsample)
-                imgs = None
-
                 # per_cam_poses, per_cam_near_fars, intrinsics, _ = load_llffvideo_poses(
                 #     datadir, downsample=self.downsample, split='all', near_scaling=self.near_scaling)
                 # # render_poses = per_cam_poses[0].numpy().reshape(-1, 3, 4)

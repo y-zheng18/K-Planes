@@ -150,6 +150,7 @@ class LowrankModel(nn.Module):
         if bg_color is None:
             pass
         else:
+            assert bg_color.sum() == 0, "Background color must be black."
             comp_rgb = comp_rgb + (1.0 - accumulated_weight) * bg_color
         return comp_rgb
 

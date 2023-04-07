@@ -251,7 +251,8 @@ class KPlaneField(nn.Module):
     def forward(self,
                 pts: torch.Tensor,
                 directions: torch.Tensor,
-                timestamps: Optional[torch.Tensor] = None):
+                timestamps: Optional[torch.Tensor] = None,
+                train_color: bool = True):
         camera_indices = None
         if self.use_appearance_embedding:
             if timestamps is None:
@@ -315,7 +316,8 @@ class KPlaneField(nn.Module):
             rgb = torch.sigmoid(rgb).view(n_rays, n_samples, 3)
         else:
             rgb = self.color_net(color_features).to(directions).view(n_rays, n_samples, 3)
-        rgb = rgb * 0 + 0.8 # for debugging
+        if not train_color:
+            rgb = rgb * 0 + 0.8 # for debugging
         return {"rgb": rgb, "density": density}
 
     def get_params(self):

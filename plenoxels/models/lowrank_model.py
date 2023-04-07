@@ -166,7 +166,7 @@ class LowrankModel(nn.Module):
         accumulation = torch.sum(weights, dim=-2)
         return accumulation
 
-    def forward(self, rays_o, rays_d, bg_color, near_far: torch.Tensor, timestamps=None):
+    def forward(self, rays_o, rays_d, bg_color, near_far: torch.Tensor, timestamps=None, train_color=True):
         """
         rays_o : [batch, 3]
         rays_d : [batch, 3]
@@ -188,7 +188,7 @@ class LowrankModel(nn.Module):
             ray_bundle, timestamps=timestamps, density_fns=self.density_fns)
         # print("ray_samples", ray_samples.get_positions().shape)
         # print("ray_bundle", ray_bundle.directions.shape)
-        field_out = self.field(ray_samples.get_positions(), ray_bundle.directions, timestamps)
+        field_out = self.field(ray_samples.get_positions(), ray_bundle.directions, timestamps, train_color=train_color)
         rgb, density = field_out["rgb"], field_out["density"]
 
         weights = ray_samples.get_weights(density)

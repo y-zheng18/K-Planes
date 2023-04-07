@@ -73,11 +73,11 @@ class BaseTrainer(abc.ABC):
         if "timestamps" not in data:
             data["timestamps"] = None
         self.timer.check("move-to-device")
-
+        train_color = self.global_step > 5000
         with torch.cuda.amp.autocast(enabled=self.train_fp16):
             fwd_out = self.model(
                 data['rays_o'], data['rays_d'], bg_color=data['bg_color'],
-                near_far=data['near_fars'], timestamps=data['timestamps'])
+                near_far=data['near_fars'], timestamps=data['timestamps'], train_color=train_color)
             self.timer.check("model-forward")
             # Reconstruction loss
             recon_loss = self.criterion(fwd_out['rgb'], data['imgs'])

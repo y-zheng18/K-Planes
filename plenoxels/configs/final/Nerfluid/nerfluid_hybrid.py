@@ -1,5 +1,5 @@
 config = {
- 'expname': 'explicit_fluid_hybrid_debug',
+ 'expname': 'explicit_fluid_hybrid_debug_color',
  'logdir': './logs/fluid_debug',
  'device': 'cuda:0',
 

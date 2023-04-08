@@ -73,8 +73,9 @@ class BaseTrainer(abc.ABC):
         if "timestamps" not in data:
             data["timestamps"] = None
         self.timer.check("move-to-device")
-        train_color = self.global_step > 5000
+        train_color = self.global_step > 50
         with torch.cuda.amp.autocast(enabled=self.train_fp16):
+            print("train_color", train_color, 'global_step', self.global_step)
             fwd_out = self.model(
                 data['rays_o'], data['rays_d'], bg_color=data['bg_color'],
                 near_far=data['near_fars'], timestamps=data['timestamps'], train_color=train_color)

@@ -314,16 +314,16 @@ class BaseTrainer(abc.ABC):
         self.model.load_state_dict(checkpoint_data["model"], strict=False)
         log.info("=> Loaded model state from checkpoint")
 
-        if training_needed:
-            self.optimizer.load_state_dict(checkpoint_data["optimizer"])
-            log.info("=> Loaded optimizer state from checkpoint")
+        # if training_needed:
+        #     self.optimizer.load_state_dict(checkpoint_data["optimizer"])
+        #     log.info("=> Loaded optimizer state from checkpoint")
+        #
+        # if training_needed and self.scheduler is not None:
+        #     self.scheduler.load_state_dict(checkpoint_data['lr_scheduler'])
+        #     log.info("=> Loaded scheduler state from checkpoint")
 
-        if training_needed and self.scheduler is not None:
-            self.scheduler.load_state_dict(checkpoint_data['lr_scheduler'])
-            log.info("=> Loaded scheduler state from checkpoint")
-
-        self.global_step = checkpoint_data["global_step"]
-        log.info(f"=> Loaded step {self.global_step} from checkpoints")
+        # self.global_step = checkpoint_data["global_step"]
+        # log.info(f"=> Loaded step {self.global_step} from checkpoints")
 
     @abc.abstractmethod
     def init_epoch_info(self) -> Dict[str, EMA]:

@@ -316,11 +316,11 @@ class KPlaneField(nn.Module):
             rgb = torch.sigmoid(rgb).view(n_rays, n_samples, 3)
         else:
             rgb = self.color_net(color_features).to(directions).view(n_rays, n_samples, 3)
-        print('train color', train_color)
+        # print('train color', train_color)
         if not train_color:
             rgb = rgb * 0 + 0.8 # for debugging
-        if train_color:
-            print('training with color')
+        # if train_color:
+            # print('training with color')
         return {"rgb": rgb, "density": density}
 
     def get_params(self):
